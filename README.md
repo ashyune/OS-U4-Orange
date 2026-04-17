@@ -6,7 +6,7 @@
 - GitHub Repository: https://github.com/ashyune/OS-U4-Orange
 
 ## Environment
-- OS: Ubuntu 22.04
+- OS: Linux
 - Compiler: gcc
 - Libraries: OpenSSL (`libssl-dev`)
 
@@ -32,19 +32,19 @@ make test-integration
 make test_objects
 ./test_objects
 ```
-![1A](1A.png)
+![1A](Screenshots/1A.png)
 ### 1B — `find .pes/objects -type f` showing sharded structure
 ```bash
 find .pes/objects -type f
 ```
-![1B](Screenshot%20from%202026-04-17%2022-30-17.png)
+![1B](Screenshots/1B.png)
 
 ### 2A — `./test_tree` output showing all tests passing
 ```bash
 make test_tree
 ./test_tree
 ```
-![2A](Screenshot%20from%202026-04-17%2022-30-59.png)
+![2A](Screenshots/2A.png)
 
 ### 2B — `xxd` of a raw tree object (first 20 lines)
 ```bash
@@ -52,7 +52,7 @@ TREE_OBJ=$(find .pes/objects -type f | head -n 1)
 echo "$TREE_OBJ"
 xxd "$TREE_OBJ" | head -20
 ```
-![2B](Screenshot%20from%202026-04-17%2022-44-00.png)
+![2B](Screenshots/2B.png)
 
 ### 3A — `pes init` -> `pes add` -> `pes status`
 ```bash
@@ -63,13 +63,13 @@ echo "world" > file2.txt
 ./pes add file1.txt file2.txt
 ./pes status
 ```
-![3A](Screenshot%20from%202026-04-17%2022-45-39.png)
+![3A](Screenshots/3A.png)
 
 ### 3B — `cat .pes/index` (text format index)
 ```bash
 cat .pes/index
 ```
-![3B](Screenshot%20from%202026-04-17%2022-46-03.png)
+![3B](Screenshots/3B.png)
 
 ### 4A — `pes log` output with three commits
 ```bash
@@ -88,28 +88,28 @@ echo "Goodbye" > bye.txt
 
 ./pes log
 ```
-![4A](Screenshot%20from%202026-04-17%2022-48-33.png)
+![4A](Screenshots/4A.png)
 
 ### 4B — `find .pes -type f | sort` showing object growth
 ```bash
 find .pes -type f | sort
 ```
-![4B](Screenshot%20from%202026-04-17%2022-48-56.png)
+![4B](Screenshots/4B.png)
 
 ### 4C — `cat .pes/refs/heads/main` and `cat .pes/HEAD`
 ```bash
 cat .pes/refs/heads/main
 cat .pes/HEAD
 ```
-![4C](Screenshot%20from%202026-04-17%2022-49-18.png)
+![4C](Screenshots/4C.png)
 
 ### Final — Full integration test
 ```bash
 make test-integration
 ```
-![F1](Screenshot%20from%202026-04-17%2022-50-23.png)
-![F2](Screenshot%20from%202026-04-17%2022-50-14.png)
-![F3](Screenshot%20from%202026-04-17%2022-49-54-1.png)
+![F1](Screenshots/F1.png)
+![F2](Screenshots/F2.png)
+![F3](Screenshots/F3.png)
 
 ## Phase 5 & 6, Analysis Questions
 
