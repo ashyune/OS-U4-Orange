@@ -172,6 +172,32 @@ static int load_index_for_tree(TreeIndex *index) {
     return 0;
 }
 
+static int build_tree_level(const TreeIndex *index, const char *prefix, ObjectID *id_out) {
+    Tree tree;
+    tree.count = 0;
+
+    size_t prefix_len = strlen(prefix);
+    for (int i = 0; i < index->count; i++) {
+        const char *path = index->entries[i].path;
+        if (prefix_len > 0 && strncmp(path, prefix, prefix_len) != 0) continue;
+
+        const char *rest = path + prefix_len;
+        if (rest[0] == '\0') continue;
+
+        const char *slash = strchr(rest, '/');
+        if (slash) continue;
+
+        if (tree.count >= MAX_TREE_ENTRIES) return -1;
+        TreeEntry *entry = &tree.entries[tree.count++];
+        entry->mode = index->entries[i].mode;
+        entry->hash = index->entries[i].hash;
+        snprintf(entry->name, sizeof(entry->name), "%s", rest);
+    }
+
+    if (tree.count == 0) return -1;
+    return -1;
+}
+
 // Build a tree hierarchy from the current index and write all tree
 // objects to the object store.
 //
