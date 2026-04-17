@@ -224,7 +224,14 @@ static int build_tree_level(const TreeIndex *index, const char *prefix, ObjectID
     }
 
     if (tree.count == 0) return -1;
-    return -1;
+
+    void *data = NULL;
+    size_t len = 0;
+    if (tree_serialize(&tree, &data, &len) != 0) return -1;
+
+    int rc = object_write(OBJ_TREE, data, len, id_out);
+    free(data);
+    return rc;
 }
 
 // Build a tree hierarchy from the current index and write all tree
