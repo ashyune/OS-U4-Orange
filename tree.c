@@ -185,13 +185,42 @@ static int build_tree_level(const TreeIndex *index, const char *prefix, ObjectID
         if (rest[0] == '\0') continue;
 
         const char *slash = strchr(rest, '/');
-        if (slash) continue;
+        if (!slash) {
+            if (tree.count >= MAX_TREE_ENTRIES) return -1;
+            TreeEntry *entry = &tree.entries[tree.count++];
+            entry->mode = index->entries[i].mode;
+            entry->hash = index->entries[i].hash;
+            snprintf(entry->name, sizeof(entry->name), "%s", rest);
+            continue;
+        }
+
+        size_t dir_len = (size_t)(slash - rest);
+        if (dir_len == 0 || dir_len >= 256) return -1;
+
+        char dir_name[256];
+        memcpy(dir_name, rest, dir_len);
+        dir_name[dir_len] = '\0';
+
+        int exists = 0;
+        for (int j = 0; j < tree.count; j++) {
+            if (tree.entries[j].mode == MODE_DIR && strcmp(tree.entries[j].name, dir_name) == 0) {
+                exists = 1;
+                break;
+            }
+        }
+        if (exists) continue;
+
+        char child_prefix[1024];
+        snprintf(child_prefix, sizeof(child_prefix), "%s%s/", prefix, dir_name);
+
+        ObjectID child_id;
+        if (build_tree_level(index, child_prefix, &child_id) != 0) return -1;
 
         if (tree.count >= MAX_TREE_ENTRIES) return -1;
         TreeEntry *entry = &tree.entries[tree.count++];
-        entry->mode = index->entries[i].mode;
-        entry->hash = index->entries[i].hash;
-        snprintf(entry->name, sizeof(entry->name), "%s", rest);
+        entry->mode = MODE_DIR;
+        entry->hash = child_id;
+        snprintf(entry->name, sizeof(entry->name), "%s", dir_name);
     }
 
     if (tree.count == 0) return -1;
