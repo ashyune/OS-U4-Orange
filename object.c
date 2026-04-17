@@ -105,7 +105,13 @@ int object_write(ObjectType type, const void *data, size_t len, ObjectID *id_out
         default: return -1;
     }
 
-    (void)type_str;
+    char header[64];
+    int header_written = snprintf(header, sizeof(header), "%s %zu", type_str, len);
+    if (header_written < 0 || (size_t)header_written >= sizeof(header) - 1) return -1;
+    size_t header_len = (size_t)header_written + 1;
+
+    (void)header;
+    (void)header_len;
     return -1;
 }
 
